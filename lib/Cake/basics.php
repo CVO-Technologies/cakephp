@@ -790,6 +790,36 @@ if (!function_exists('__c')) {
 
 }
 
+if (!function_exists('__x')) {
+
+	/**
+	 * Returns a translated string if one is found; Otherwise, the submitted message.
+	 *
+	 * @param string $context Context of the text
+	 * @param string $singular Text to translate
+	 * @param mixed $args Array with arguments or multiple arguments in function
+	 * @return mixed translated string
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__
+	 */
+	function __x($context, $singular, $args = null) {
+		if (!$singular) {
+			return;
+		}
+
+		App::uses('I18n', 'I18n');
+		$translated = I18n::translate($singular, null, null, null, null, null, $context);
+		if ($args === null) {
+			return $translated;
+		} elseif (!is_array($args)) {
+			$args = array_slice(func_get_args(), 1);
+		}
+
+		$translated = preg_replace('/(?<!%)%(?![%\'\-+bcdeEfFgGosuxX\d\.])/', '%%', $translated);
+		return vsprintf($translated, $args);
+	}
+
+}
+
 if (!function_exists('LogError')) {
 
 /**
